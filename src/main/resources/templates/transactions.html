@@ -143,15 +143,15 @@
                 <td th:text="${transaction.accNo}">12345678</td>
                 <td th:text="${transaction.fullName}">John Doe</td>
                 <td>
-                    <span th:class="'transaction-type ' + 
-                        (${transaction.transactionType.equals('Deposit')} ? 'type-deposit' : 
-                        (${transaction.transactionType.equals('withdrawal')} ? 'type-withdrawal' : 
-                        (${transaction.transactionType.equals('Transfer-send')} ? 'type-transfer-send' : 
-                        'type-transfer-receive')))"
-                          th:text="${transaction.transactionType}">Deposit</span>
+                    <span th:if="${transaction.transactionType == 'Deposit'}" class="transaction-type type-deposit" th:text="${transaction.transactionType}">Deposit</span>
+                    <span th:if="${transaction.transactionType == 'withdrawal'}" class="transaction-type type-withdrawal" th:text="${transaction.transactionType}">withdrawal</span>
+                    <span th:if="${transaction.transactionType == 'Transfer-send'}" class="transaction-type type-transfer-send" th:text="${transaction.transactionType}">Transfer-send</span>
+                    <span th:if="${transaction.transactionType == 'Transfer-receive'}" class="transaction-type type-transfer-receive" th:text="${transaction.transactionType}">Transfer-receive</span>
+                    <span th:if="${transaction.transactionType != 'Deposit' and transaction.transactionType != 'withdrawal' and transaction.transactionType != 'Transfer-send' and transaction.transactionType != 'Transfer-receive'}" 
+                          class="transaction-type" th:text="${transaction.transactionType}">Unknown</span>
                 </td>
-                <td th:class="${transaction.positiveAmount} ? 'amount-positive' : 'amount-negative'"
-                    th:text="${transaction.formattedAmount}">R 100.00</td>
+                <td th:if="${transaction.positiveAmount}" class="amount-positive" th:text="${transaction.formattedAmount}">R 100.00</td>
+                <td th:if="${!transaction.positiveAmount}" class="amount-negative" th:text="${transaction.formattedAmount}">R 100.00</td>
                 <td th:text="${transaction.formattedDateTime}">2024-01-01 12:00:00</td>
             </tr>
             <tr th:if="${transactions == null or transactions.isEmpty()}">

@@ -104,8 +104,23 @@ public class TransactionDatabase {
                 transact.setAccount(account);
                 transact.setTransactionType(transactionType);
                 transact.setAmount(amount);
-                transact.setDateTime(LocalDateTime.parse(dateTime));
+                
+                try {
+                    // Use the same formatter as when inserting
+                    transact.setDateTime(LocalDateTime.parse(dateTime, DateTimeFormatter.ISO_DATE_TIME));
+                } catch (DateTimeParseException e) {
+                    System.out.println("Error parsing dateTime for transaction " + id + ": " + e.getMessage());
+                    // Try alternative format
+                    try {
+                        transact.setDateTime(LocalDateTime.parse(dateTime));
+                    } catch (DateTimeParseException e2) {
+                        System.out.println("Failed to parse dateTime with alternative format: " + e2.getMessage());
+                        transact.setDateTime(LocalDateTime.now()); // Use current time as fallback
+                    }
+                }
+                
                 transactions.add(transact);
+                System.out.println("Loaded transaction: id=" + id + ", type=" + transactionType + ", amount=" + amount);
             }
         } catch (SQLException e) {
             System.out.println("Error retrieving transactions: " + e.getMessage());
@@ -158,9 +173,23 @@ public class TransactionDatabase {
         Collections.sort(allTransactions, new Comparator<transaction>() {
             @Override
             public int compare(transaction t1, transaction t2) {
-                return t2.getDateTime().compareTo(t1.getDateTime());
+                LocalDateTime dt1 = t1.getDateTime();
+                LocalDateTime dt2 = t2.getDateTime();
+                
+                if (dt1 == null && dt2 == null) {
+                    return 0;
+                }
+                if (dt1 == null) {
+                    return 1; // Null values go to the end
+                }
+                if (dt2 == null) {
+                    return -1;
+                }
+                return dt2.compareTo(dt1);
             }
         });
+        
+        System.out.println("Total transactions loaded for user: " + allTransactions.size());
 
         return allTransactions;
     }
