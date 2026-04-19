@@ -186,4 +186,33 @@ public class AccountDatabase {
         }
     }
 
+    // Method to get all accounts except the current user's accounts
+    public static List<Account> getAllAccountsExceptUser(User user) {
+        String selectSQL = "SELECT * FROM Account WHERE user_id != ?";
+        List<Account> accounts = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+            pstmt.setLong(1, user.getId());
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Long AccNo = rs.getLong("accNo");
+                Long userId = rs.getLong("user_id");
+                Double balance = rs.getDouble("balance");
+                String accountType = rs.getString("accountType");
+                if (accountType == null) {
+                    accountType = TYPE_SAVINGS;
+                }
+
+                User accountUser = getUserById(userId);
+                accounts.add(new Account(AccNo, accountUser, balance, accountType));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving accounts: " + e.getMessage());
+        }
+
+        return accounts;
+    }
+
 }

@@ -41,7 +41,7 @@
     </div>
 
     <!-- Form Section - Only show if user has accounts -->
-    <form action="/deposit" method="POST" th:unless="${noAccounts}">
+    <form action="#" th:action="@{/deposit}" method="POST" th:unless="${noAccounts}">
         <label class="col-form-label mt-4" for="accNo">Select Account:</label>
         <select class="form-control" id="accNo" name="accNo" required>
             <option value="">-- Select an account --</option>

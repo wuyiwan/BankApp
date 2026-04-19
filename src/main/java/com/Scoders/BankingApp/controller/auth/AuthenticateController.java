@@ -42,14 +42,22 @@ public String register(
         @RequestParam("username") String username,
         @RequestParam("surname") String surname,
         @RequestParam("password") String password,
+        @RequestParam("confirmPassword") String confirmPassword,
         Model model
 )
 {
+    if (!password.equals(confirmPassword)) {
+        model.addAttribute("response", "Passwords do not match!");
+        return "register";
+    }
 
-boolean response = auth.register(username,surname,password);
-
-    return "login";
-
+    boolean response = auth.register(username,surname,password);
+    if (response) {
+        return "login";
+    } else {
+        model.addAttribute("response", "Registration failed!");
+        return "register";
+    }
 }
 
 @GetMapping("/login")
