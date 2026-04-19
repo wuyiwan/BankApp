@@ -654,7 +654,7 @@
                     </td>
                     <td th:if="${hasStockAccount}">
                         <button class="action-btn btn-buy" 
-                                onclick="openTradeModal('[[${stock.symbol}]]', '[[${stock.name}]]', 'stock', [[${stock.price}]])">
+                                th:onclick="'openTradeModal(\'' + ${stock.symbol} + '\', \'' + ${stock.name} + '\', \'stock\', ' + ${stock.price} + ')'">
                             交易
                         </button>
                     </td>
@@ -708,7 +708,7 @@
                     </td>
                     <td th:if="${hasStockAccount}">
                         <button class="action-btn btn-buy" 
-                                onclick="openTradeModal('[[${gold.symbol}]]', '[[${gold.name}]]', 'gold', [[${gold.price}]])">
+                                th:onclick="'openTradeModal(\'' + ${gold.symbol} + '\', \'' + ${gold.name} + '\', \'gold\', ' + ${gold.price} + ')'">
                             交易
                         </button>
                     </td>
@@ -762,7 +762,7 @@
                     </td>
                     <td th:if="${hasStockAccount}">
                         <button class="action-btn btn-buy" 
-                                onclick="openTradeModal('[[${future.symbol}]]', '[[${future.name}]]', 'future', [[${future.price}]])">
+                                th:onclick="'openTradeModal(\'' + ${future.symbol} + '\', \'' + ${future.name} + '\', \'future\', ' + ${future.price} + ')'">
                             交易
                         </button>
                     </td>
