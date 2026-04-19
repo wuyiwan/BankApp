@@ -153,6 +153,14 @@
             border-bottom-left-radius: 5px;
         }
 
+        .message-bubble.smart-reply {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+            white-space: pre-line;
+        }
+
         .message-info {
             font-size: 0.75rem;
             color: #666;
@@ -383,6 +391,18 @@
                     </div>
                 </div>
             </th:block>
+
+            <div th:if="${smartReply != null}" class="message-wrapper support">
+                <div class="message-avatar support">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble smart-reply" th:text="${smartReply}"></div>
+                    <div class="message-info">
+                        <span><i class="fas fa-robot"></i> 智能客服</span>
+                    </div>
+                </div>
+            </div>
 
             <div th:if="${autoReply != null}" class="message-wrapper support">
                 <div class="message-avatar support">

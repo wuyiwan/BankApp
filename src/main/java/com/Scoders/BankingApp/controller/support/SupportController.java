@@ -3,6 +3,7 @@ package com.Scoders.BankingApp.controller.support;
 import com.Scoders.BankingApp.database.SupportQuestionDatabase;
 import com.Scoders.BankingApp.model.SupportQuestion;
 import com.Scoders.BankingApp.model.User;
+import com.Scoders.BankingApp.service.SupportService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,8 +46,23 @@ public class SupportController {
         }
         
         if (question != null && !question.trim().isEmpty()) {
-            SupportQuestionDatabase.insertSupportQuestion(currentUser.getId(), question.trim());
-            model.addAttribute("autoReply", "该问题已提交，请等待回复");
+            String trimmedQuestion = question.trim();
+            
+            String autoReply = SupportService.getAutoReply(trimmedQuestion);
+            boolean isSmartReply = SupportService.isAutoReply(autoReply);
+            
+            SupportQuestionDatabase.insertSupportQuestion(currentUser.getId(), trimmedQuestion);
+            
+            if (isSmartReply) {
+                List<SupportQuestion> questions = SupportQuestionDatabase.getSupportQuestionsByUserId(currentUser.getId());
+                if (!questions.isEmpty()) {
+                    SupportQuestion latestQuestion = questions.get(0);
+                    SupportQuestionDatabase.updateSupportQuestionAnswer(latestQuestion.getId(), autoReply);
+                }
+                model.addAttribute("smartReply", autoReply);
+            } else {
+                model.addAttribute("autoReply", autoReply);
+            }
         }
         
         List<SupportQuestion> questions = SupportQuestionDatabase.getSupportQuestionsByUserId(currentUser.getId());
