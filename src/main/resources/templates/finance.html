@@ -210,20 +210,6 @@
             color: #856404;
         }
 
-        .refresh-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .refresh-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
         @keyframes pulse {
             0%, 100% {
                 opacity: 1;
@@ -241,6 +227,14 @@
             display: inline-block;
             margin-right: 5px;
             animation: pulse 2s infinite;
+        }
+
+        .arrow-up {
+            color: #28a745;
+        }
+
+        .arrow-down {
+            color: #dc3545;
         }
 
         @media (max-width: 768px) {
@@ -313,14 +307,14 @@
                     </td>
                     <td class="price" th:text="'$' + ${#numbers.formatDecimal(stock.price, 1, 2)}">$175.50</td>
                     <td>
-                        <span th:class="${stock.positive} ? 'change-positive' : 'change-negative'"
-                              th:text="${stock.positive}">
-                            <span th:if="${stock.positive}"><i class="fas fa-caret-up"></i></span>
-                            <span th:unless="${stock.positive}"><i class="fas fa-caret-down"></i></span>
+                        <span th:class="${stock.positive ? 'change-positive' : 'change-negative'}">
+                            <i th:if="${stock.positive}" class="fas fa-caret-up arrow-up"></i>
+                            <i th:unless="${stock.positive}" class="fas fa-caret-down arrow-down"></i>
                             <span th:text="${#numbers.formatDecimal(stock.change, 1, 2)}">+2.35</span>
                         </span>
-                        <span th:class="${stock.positive} ? 'badge-positive change-badge' : 'badge-negative change-badge'"
-                              th:text="${#numbers.formatDecimal(stock.changePercent, 1, 2) + '%'">+1.35%</span>
+                        <span th:class="${stock.positive ? 'badge-positive change-badge' : 'badge-negative change-badge'}">
+                            <span th:text="${#numbers.formatDecimal(stock.changePercent, 1, 2)}">+1.35</span>%
+                        </span>
                     </td>
                     <td>
                         <div class="high-low">
@@ -358,14 +352,14 @@
                     </td>
                     <td class="price" th:text="'$' + ${#numbers.formatDecimal(gold.price, 1, 2)}">$2350.50</td>
                     <td>
-                        <span th:class="${gold.positive} ? 'change-positive' : 'change-negative'"
-                              th:text="${gold.positive}">
-                            <span th:if="${gold.positive}"><i class="fas fa-caret-up"></i></span>
-                            <span th:unless="${gold.positive}"><i class="fas fa-caret-down"></i></span>
+                        <span th:class="${gold.positive ? 'change-positive' : 'change-negative'}">
+                            <i th:if="${gold.positive}" class="fas fa-caret-up arrow-up"></i>
+                            <i th:unless="${gold.positive}" class="fas fa-caret-down arrow-down"></i>
                             <span th:text="${#numbers.formatDecimal(gold.change, 1, 2)}">+15.30</span>
                         </span>
-                        <span th:class="${gold.positive} ? 'badge-positive change-badge' : 'badge-negative change-badge'"
-                              th:text="${#numbers.formatDecimal(gold.changePercent, 1, 2) + '%'">+0.65%</span>
+                        <span th:class="${gold.positive ? 'badge-positive change-badge' : 'badge-negative change-badge'}">
+                            <span th:text="${#numbers.formatDecimal(gold.changePercent, 1, 2)}">+0.65</span>%
+                        </span>
                     </td>
                     <td>
                         <div class="high-low">
@@ -403,14 +397,14 @@
                     </td>
                     <td class="price" th:text="'$' + ${#numbers.formatDecimal(future.price, 1, 2)}">$80.50</td>
                     <td>
-                        <span th:class="${future.positive} ? 'change-positive' : 'change-negative'"
-                              th:text="${future.positive}">
-                            <span th:if="${future.positive}"><i class="fas fa-caret-up"></i></span>
-                            <span th:unless="${future.positive}"><i class="fas fa-caret-down"></i></span>
+                        <span th:class="${future.positive ? 'change-positive' : 'change-negative'}">
+                            <i th:if="${future.positive}" class="fas fa-caret-up arrow-up"></i>
+                            <i th:unless="${future.positive}" class="fas fa-caret-down arrow-down"></i>
                             <span th:text="${#numbers.formatDecimal(future.change, 1, 2)}">+1.20</span>
                         </span>
-                        <span th:class="${future.positive} ? 'badge-positive change-badge' : 'badge-negative change-badge'"
-                              th:text="${#numbers.formatDecimal(future.changePercent, 1, 2) + '%'">+1.50%</span>
+                        <span th:class="${future.positive ? 'badge-positive change-badge' : 'badge-negative change-badge'}">
+                            <span th:text="${#numbers.formatDecimal(future.changePercent, 1, 2)}">+1.50</span>%
+                        </span>
                     </td>
                     <td>
                         <div class="high-low">
