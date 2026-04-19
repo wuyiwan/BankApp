@@ -46,7 +46,7 @@ public class SupportController {
         
         if (question != null && !question.trim().isEmpty()) {
             SupportQuestionDatabase.insertSupportQuestion(currentUser.getId(), question.trim());
-            model.addAttribute("successMessage", "该问题已提交，请等待回复");
+            model.addAttribute("autoReply", "该问题已提交，请等待回复");
         }
         
         List<SupportQuestion> questions = SupportQuestionDatabase.getSupportQuestionsByUserId(currentUser.getId());
