@@ -10,6 +10,7 @@ public class SupportQuestion {
     private LocalDateTime createdAt;
     private LocalDateTime answeredAt;
     private String status;
+    private Boolean isSmartReply;
 
     public Long getId() {
         return id;
@@ -65,5 +66,13 @@ public class SupportQuestion {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Boolean getIsSmartReply() {
+        return isSmartReply;
+    }
+
+    public void setIsSmartReply(Boolean isSmartReply) {
+        this.isSmartReply = isSmartReply;
     }
 }

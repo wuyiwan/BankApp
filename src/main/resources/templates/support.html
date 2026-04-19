@@ -379,42 +379,24 @@
                 </div>
 
                 <div th:if="${question.answer != null}" class="message-wrapper support">
-                    <div class="message-avatar support">
-                        <i class="fas fa-headset"></i>
+                    <div class="message-avatar support" th:classappend="${question.isSmartReply} ? 'smart-avatar' : ''">
+                        <i th:if="${question.isSmartReply}" class="fas fa-robot"></i>
+                        <i th:unless="${question.isSmartReply}" class="fas fa-headset"></i>
                     </div>
                     <div class="message-content">
-                        <div class="message-bubble" th:text="${question.answer}"></div>
+                        <div class="message-bubble" 
+                             th:classappend="${question.isSmartReply} ? 'smart-reply' : ''"
+                             th:text="${question.answer}"></div>
                         <div class="message-info">
-                            <span>客服回复于</span>
-                            <span th:text="${#temporals.format(question.answeredAt, 'yyyy-MM-dd HH:mm')}"></span>
+                            <span th:if="${question.isSmartReply}"><i class="fas fa-robot"></i> 智能客服</span>
+                            <th:block th:unless="${question.isSmartReply}">
+                                <span>客服回复于</span>
+                                <span th:text="${#temporals.format(question.answeredAt, 'yyyy-MM-dd HH:mm')}"></span>
+                            </th:block>
                         </div>
                     </div>
                 </div>
             </th:block>
-
-            <div th:if="${smartReply != null}" class="message-wrapper support">
-                <div class="message-avatar support">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-content">
-                    <div class="message-bubble smart-reply" th:text="${smartReply}"></div>
-                    <div class="message-info">
-                        <span><i class="fas fa-robot"></i> 智能客服</span>
-                    </div>
-                </div>
-            </div>
-
-            <div th:if="${autoReply != null}" class="message-wrapper support">
-                <div class="message-avatar support">
-                    <i class="fas fa-headset"></i>
-                </div>
-                <div class="message-content">
-                    <div class="message-bubble" th:text="${autoReply}"></div>
-                    <div class="message-info">
-                        <span>客服</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="input-area">

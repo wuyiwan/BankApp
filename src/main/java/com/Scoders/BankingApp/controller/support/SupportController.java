@@ -53,15 +53,9 @@ public class SupportController {
             
             SupportQuestionDatabase.insertSupportQuestion(currentUser.getId(), trimmedQuestion);
             
-            if (isSmartReply) {
-                List<SupportQuestion> questions = SupportQuestionDatabase.getSupportQuestionsByUserId(currentUser.getId());
-                if (!questions.isEmpty()) {
-                    SupportQuestion latestQuestion = questions.get(0);
-                    SupportQuestionDatabase.updateSupportQuestionAnswer(latestQuestion.getId(), autoReply);
-                }
-                model.addAttribute("smartReply", autoReply);
-            } else {
-                model.addAttribute("autoReply", autoReply);
+            SupportQuestion latestQuestion = SupportQuestionDatabase.getLatestQuestionByUserId(currentUser.getId());
+            if (latestQuestion != null) {
+                SupportQuestionDatabase.updateSupportQuestionAnswer(latestQuestion.getId(), autoReply, isSmartReply);
             }
         }
         

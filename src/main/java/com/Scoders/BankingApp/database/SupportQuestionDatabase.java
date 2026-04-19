@@ -22,11 +22,18 @@ public class SupportQuestionDatabase {
                 + "createdAt TEXT, "
                 + "answeredAt TEXT, "
                 + "status TEXT, "
+                + "isSmartReply INTEGER DEFAULT 0, "
                 + "FOREIGN KEY(userId) REFERENCES User(id))";
 
         try (Connection conn = DriverManager.getConnection(DATABASE_URL);
              Statement stmt = conn.createStatement()) {
             stmt.execute(createTableSQL);
+            try {
+                stmt.execute("ALTER TABLE SupportQuestion ADD COLUMN isSmartReply INTEGER DEFAULT 0");
+                System.out.println("Added isSmartReply column to SupportQuestion table.");
+            } catch (SQLException e) {
+                System.out.println("isSmartReply column may already exist: " + e.getMessage());
+            }
             System.out.println("SupportQuestion table created or already exists.");
         } catch (SQLException e) {
             System.out.println("Error creating SupportQuestion table: " + e.getMessage());
@@ -69,7 +76,7 @@ public class SupportQuestionDatabase {
     }
 
     public static List<SupportQuestion> getSupportQuestionsByUserId(Long userId) {
-        String selectSQL = "SELECT * FROM SupportQuestion WHERE userId = ? ORDER BY createdAt DESC";
+        String selectSQL = "SELECT * FROM SupportQuestion WHERE userId = ? ORDER BY createdAt ASC";
         List<SupportQuestion> questions = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(DATABASE_URL);
@@ -87,15 +94,35 @@ public class SupportQuestionDatabase {
         return questions;
     }
 
-    public static void updateSupportQuestionAnswer(Long id, String answer) {
-        String updateSQL = "UPDATE SupportQuestion SET answer = ?, answeredAt = ?, status = ? WHERE id = ?";
+    public static SupportQuestion getLatestQuestionByUserId(Long userId) {
+        String selectSQL = "SELECT * FROM SupportQuestion WHERE userId = ? ORDER BY createdAt DESC LIMIT 1";
+        SupportQuestion question = null;
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+            pstmt.setLong(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                question = mapResultSetToSupportQuestion(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving latest question: " + e.getMessage());
+        }
+
+        return question;
+    }
+
+    public static void updateSupportQuestionAnswer(Long id, String answer, boolean isSmartReply) {
+        String updateSQL = "UPDATE SupportQuestion SET answer = ?, answeredAt = ?, status = ?, isSmartReply = ? WHERE id = ?";
 
         try (Connection conn = DriverManager.getConnection(DATABASE_URL);
              PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
             pstmt.setString(1, answer);
             pstmt.setString(2, LocalDateTime.now().format(ISO_FORMATTER));
             pstmt.setString(3, "ANSWERED");
-            pstmt.setLong(4, id);
+            pstmt.setInt(4, isSmartReply ? 1 : 0);
+            pstmt.setLong(5, id);
             pstmt.executeUpdate();
             System.out.println("Support question answer updated successfully.");
         } catch (SQLException e) {
@@ -128,6 +155,13 @@ public class SupportQuestionDatabase {
         question.setQuestion(rs.getString("question"));
         question.setAnswer(rs.getString("answer"));
         question.setStatus(rs.getString("status"));
+
+        try {
+            int isSmartReplyInt = rs.getInt("isSmartReply");
+            question.setIsSmartReply(isSmartReplyInt == 1);
+        } catch (SQLException e) {
+            question.setIsSmartReply(false);
+        }
 
         String createdAtStr = rs.getString("createdAt");
         if (createdAtStr != null && !createdAtStr.isEmpty()) {
