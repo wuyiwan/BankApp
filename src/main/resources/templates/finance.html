@@ -653,8 +653,11 @@
                         </div>
                     </td>
                     <td th:if="${hasStockAccount}">
-                        <button class="action-btn btn-buy" 
-                                th:onclick="'openTradeModal(\'' + ${stock.symbol} + '\', \'' + ${stock.name} + '\', \'stock\', ' + ${stock.price} + ')'">
+                        <button class="action-btn btn-buy trade-btn" 
+                                th:data-symbol="${stock.symbol}"
+                                th:data-name="${stock.name}"
+                                data-type="stock"
+                                th:data-price="${stock.price}">
                             交易
                         </button>
                     </td>
@@ -707,8 +710,11 @@
                         </div>
                     </td>
                     <td th:if="${hasStockAccount}">
-                        <button class="action-btn btn-buy" 
-                                th:onclick="'openTradeModal(\'' + ${gold.symbol} + '\', \'' + ${gold.name} + '\', \'gold\', ' + ${gold.price} + ')'">
+                        <button class="action-btn btn-buy trade-btn" 
+                                th:data-symbol="${gold.symbol}"
+                                th:data-name="${gold.name}"
+                                data-type="gold"
+                                th:data-price="${gold.price}">
                             交易
                         </button>
                     </td>
@@ -761,8 +767,11 @@
                         </div>
                     </td>
                     <td th:if="${hasStockAccount}">
-                        <button class="action-btn btn-buy" 
-                                th:onclick="'openTradeModal(\'' + ${future.symbol} + '\', \'' + ${future.name} + '\', \'future\', ' + ${future.price} + ')'">
+                        <button class="action-btn btn-buy trade-btn" 
+                                th:data-symbol="${future.symbol}"
+                                th:data-name="${future.name}"
+                                data-type="future"
+                                th:data-price="${future.price}">
                             交易
                         </button>
                     </td>
@@ -857,6 +866,19 @@
         if (e.target === this) {
             closeTradeModal();
         }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.trade-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                let symbol = this.dataset.symbol;
+                let name = this.dataset.name;
+                let type = this.dataset.type;
+                let price = parseFloat(this.dataset.price);
+                
+                openTradeModal(symbol, name, type, price);
+            });
+        });
     });
 </script>
 </body>
