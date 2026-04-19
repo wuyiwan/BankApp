@@ -5,13 +5,10 @@ public class FAQDataInitializer {
     public static void initializeFAQData() {
         SupportFAQDatabase.createSupportFAQTable();
         
-        if (SupportFAQDatabase.isFAQTableEmpty()) {
-            System.out.println("Initializing FAQ data...");
-            insertDefaultFAQs();
-            System.out.println("FAQ data initialized successfully.");
-        } else {
-            System.out.println("FAQ table is not empty, skipping initialization.");
-        }
+        System.out.println("Reinitializing FAQ data with updated keywords...");
+        SupportFAQDatabase.deleteAllFAQs();
+        insertDefaultFAQs();
+        System.out.println("FAQ data reinitialized successfully.");
     }
 
     private static void insertDefaultFAQs() {
@@ -25,7 +22,7 @@ public class FAQDataInitializer {
         SupportFAQDatabase.insertSupportFAQ(
             "如何查询账户余额？",
             "您好！查询账户余额的方法如下：\n1. 登录您的账户\n2. 在仪表盘首页即可看到账户余额\n3. 或者点击「查看余额」菜单查看详细余额信息\n\n余额会实时更新，您可以随时查看。",
-            "余额,查询余额,账户余额,多少钱,存款",
+            "余额,查询余额,账户余额,多少钱",
             "账户查询"
         );
 

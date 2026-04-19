@@ -94,6 +94,17 @@ public class SupportFAQDatabase {
         return true;
     }
 
+    public static void deleteAllFAQs() {
+        String deleteSQL = "DELETE FROM SupportFAQ";
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(deleteSQL);
+            System.out.println("All FAQs deleted successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error deleting FAQs: " + e.getMessage());
+        }
+    }
+
     private static SupportFAQ mapResultSetToSupportFAQ(ResultSet rs) throws SQLException {
         SupportFAQ faq = new SupportFAQ();
         faq.setId(rs.getLong("id"));
