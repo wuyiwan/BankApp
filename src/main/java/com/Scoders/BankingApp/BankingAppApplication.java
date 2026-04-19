@@ -1,8 +1,11 @@
 package com.Scoders.BankingApp;
 
+import com.Scoders.BankingApp.database.AccountDatabase;
 import com.Scoders.BankingApp.database.AccountDatabasedummy;
 import com.Scoders.BankingApp.database.FAQDataInitializer;
 import com.Scoders.BankingApp.database.SupportQuestionDatabase;
+import com.Scoders.BankingApp.database.TradeDatabase;
+import com.Scoders.BankingApp.database.TransactionDatabase;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +26,13 @@ public class BankingAppApplication {
 		return args -> {
 			// Create account table and insert sample accounts when the app starts
 			AccountDatabasedummy.createAccountTable();
+			AccountDatabase.createAccountTable();
+			
+			// Create transaction table
+			TransactionDatabase.createTransactionTable();
+			
+			// Create trade table for stock/gold/future trades
+			TradeDatabase.createTradeTable();
 			
 			// Create support question table
 			SupportQuestionDatabase.createSupportQuestionTable();

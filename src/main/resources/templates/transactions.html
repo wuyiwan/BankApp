@@ -24,7 +24,7 @@
             padding: 20px 30px;
             text-align: center;
             width: 90%;
-            max-width: 1200px;
+            max-width: 1400px;
         }
         h1 {
             font-size: 28px;
@@ -91,6 +91,28 @@
             background-color: #cce5ff;
             color: #004085;
         }
+        .type-trade-buy {
+            background-color: #e2e6ea;
+            color: #495057;
+        }
+        .type-trade-sell {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .account-type {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .account-type-stock {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .account-type-other {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
         .text-center a {
             background-color: #4a6fa5;
             color: white;
@@ -131,6 +153,7 @@
             <tr>
                 <th>Transaction ID</th>
                 <th>Account Number</th>
+                <th>Account Type</th>
                 <th>Account Holder</th>
                 <th>Transaction Type</th>
                 <th>Amount</th>
@@ -141,13 +164,20 @@
             <tr th:if="${transactions != null and !transactions.isEmpty()}" th:each="transaction : ${transactions}">
                 <td th:text="${transaction.transId}">1</td>
                 <td th:text="${transaction.accNo}">12345678</td>
+                <td>
+                    <span th:if="${transaction.accountType == 'Stock'}" class="account-type account-type-stock" th:text="${transaction.accountTypeDisplayName}">Stock Account</span>
+                    <span th:unless="${transaction.accountType == 'Stock'}" class="account-type account-type-other" th:text="${transaction.accountTypeDisplayName}">Savings Account</span>
+                </td>
                 <td th:text="${transaction.fullName}">John Doe</td>
                 <td>
                     <span th:if="${transaction.transactionType == 'Deposit'}" class="transaction-type type-deposit" th:text="${transaction.transactionType}">Deposit</span>
                     <span th:if="${transaction.transactionType == 'withdrawal'}" class="transaction-type type-withdrawal" th:text="${transaction.transactionType}">withdrawal</span>
                     <span th:if="${transaction.transactionType == 'Transfer-send'}" class="transaction-type type-transfer-send" th:text="${transaction.transactionType}">Transfer-send</span>
                     <span th:if="${transaction.transactionType == 'Transfer-receive'}" class="transaction-type type-transfer-receive" th:text="${transaction.transactionType}">Transfer-receive</span>
-                    <span th:if="${transaction.transactionType != 'Deposit' and transaction.transactionType != 'withdrawal' and transaction.transactionType != 'Transfer-send' and transaction.transactionType != 'Transfer-receive'}" 
+                    <span th:if="${transaction.transactionType == 'Transfer-receive(Stock)'}" class="transaction-type type-transfer-receive" th:text="${transaction.transactionType}">Transfer-receive(Stock)</span>
+                    <span th:if="${transaction.transactionType == 'Trade-Buy'}" class="transaction-type type-trade-buy" th:text="${transaction.transactionType}">Trade-Buy</span>
+                    <span th:if="${transaction.transactionType == 'Trade-Sell'}" class="transaction-type type-trade-sell" th:text="${transaction.transactionType}">Trade-Sell</span>
+                    <span th:if="${transaction.transactionType != 'Deposit' and transaction.transactionType != 'withdrawal' and transaction.transactionType != 'Transfer-send' and transaction.transactionType != 'Transfer-receive' and transaction.transactionType != 'Transfer-receive(Stock)' and transaction.transactionType != 'Trade-Buy' and transaction.transactionType != 'Trade-Sell'}" 
                           class="transaction-type" th:text="${transaction.transactionType}">Unknown</span>
                 </td>
                 <td th:if="${transaction.positiveAmount}" class="amount-positive" th:text="${transaction.formattedAmount}">R 100.00</td>
@@ -155,7 +185,7 @@
                 <td th:text="${transaction.formattedDateTime}">2024-01-01 12:00:00</td>
             </tr>
             <tr th:if="${transactions == null or transactions.isEmpty()}">
-                <td colspan="6" class="no-transactions">No transactions found.</td>
+                <td colspan="7" class="no-transactions">No transactions found.</td>
             </tr>
             </tbody>
         </table>

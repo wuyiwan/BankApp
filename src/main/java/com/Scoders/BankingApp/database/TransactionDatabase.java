@@ -208,6 +208,7 @@ public class TransactionDatabase {
             
             if (trans.getAccount() != null) {
                 dto.setAccNo(trans.getAccount().getAccNo());
+                dto.setAccountType(trans.getAccount().getAccountType());
                 if (trans.getAccount().getUser() != null) {
                     dto.setUsername(trans.getAccount().getUser().getUsername());
                     dto.setSurname(trans.getAccount().getUser().getSurname());
@@ -229,6 +230,7 @@ public class TransactionDatabase {
         private String username;
         private String surname;
         private String transactionType;
+        private String accountType;
         
         private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -288,6 +290,25 @@ public class TransactionDatabase {
             this.surname = surname;
         }
         
+        public String getAccountType() {
+            return accountType;
+        }
+        
+        public void setAccountType(String accountType) {
+            this.accountType = accountType;
+        }
+        
+        public String getAccountTypeDisplayName() {
+            if (accountType == null) {
+                return "Savings Account";
+            }
+            return switch (accountType) {
+                case "Stock" -> "Stock Account";
+                case "Current" -> "Current Account";
+                default -> "Savings Account";
+            };
+        }
+        
         public String getFullName() {
             StringBuilder fullName = new StringBuilder();
             if (username != null && !username.isEmpty()) {
@@ -321,7 +342,10 @@ public class TransactionDatabase {
             if (transactionType == null) {
                 return false;
             }
-            return "Deposit".equals(transactionType) || "Transfer-receive".equals(transactionType);
+            return "Deposit".equals(transactionType) 
+                || "Transfer-receive".equals(transactionType)
+                || "Transfer-receive(Stock)".equals(transactionType)
+                || "Trade-Sell".equals(transactionType);
         }
     }
 
