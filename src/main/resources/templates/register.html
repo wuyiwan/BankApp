@@ -17,7 +17,10 @@
         <img src="image/cash.png" alt="Register Icon"style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; color:white; ">
         Register Here!
       </h2>
-      <h3 th:text="${response}" ></h3>
+      <div th:if="${response}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+        <span th:text="${response}"></span>
+      </div>
       <form action="#" th:action="@{/register}" method="post">
         <!--<label for="username">Username:</label>
         <input type="text" id="username" name="username" required> -->

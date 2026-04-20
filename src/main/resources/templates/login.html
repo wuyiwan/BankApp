@@ -16,7 +16,7 @@
     <img src="image/log.png" alt="Register Icon"style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px; color:white; ">
     Log Into your Account</h1>
 
-<h3 th:text="${response}" ></h3>
+<div th:if="${response}" id="errorMessage" th:text="${response}" style="display: none;"></div>
 <div th:if="${remainingAttempts != null}" class="alert alert-warning">
     剩余登录尝试次数: <span th:text="${remainingAttempts}"></span>
 </div>
@@ -64,6 +64,13 @@
 </div>
 
 <script>
+window.onload = function() {
+    var errorMessage = document.getElementById('errorMessage');
+    if (errorMessage && errorMessage.textContent.trim() !== '') {
+        alert(errorMessage.textContent);
+    }
+};
+
 function refreshCaptcha() {
     var captchaImage = document.getElementById('captchaImage');
     if (captchaImage) {
