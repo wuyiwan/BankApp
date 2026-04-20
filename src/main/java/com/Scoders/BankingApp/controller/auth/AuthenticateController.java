@@ -5,6 +5,7 @@ import com.Scoders.BankingApp.database.SupportQuestionDatabase;
 import com.Scoders.BankingApp.database.TransactionDatabase;
 import com.Scoders.BankingApp.database.UserDatabase;
 import com.Scoders.BankingApp.model.User;
+import com.Scoders.BankingApp.security.PasswordValidator;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,11 +52,11 @@ public String register(
         return "register";
     }
 
-    boolean response = auth.register(username,surname,password);
-    if (response) {
+    PasswordValidator.ValidationResult response = auth.register(username,surname,password);
+    if (response.isValid()) {
         return "login";
     } else {
-        model.addAttribute("response", "Registration failed!");
+        model.addAttribute("response", response.getMessage());
         return "register";
     }
 }
@@ -69,12 +70,13 @@ public String register(
 public String login(
         @RequestParam("username") String username,
         @RequestParam("password") String password,
+        @RequestParam(value = "captcha", required = false) String captcha,
         Model model,
         HttpSession session
 
 ){
 
-    return auth.login(username,password,session,model);
+    return auth.login(username,password,captcha,session,model);
 }
 @GetMapping("/surname")
     public String surname(){
