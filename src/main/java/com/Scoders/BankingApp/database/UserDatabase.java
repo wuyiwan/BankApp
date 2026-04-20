@@ -21,8 +21,25 @@ public class UserDatabase {
              Statement stmt = conn.createStatement()) {
             stmt.execute(createTableSQL);
             System.out.println("User table created or already exists.");
+            ensureSessionIdColumnExists(conn);
         } catch (SQLException e) {
             System.out.println("Error creating table: " + e.getMessage());
+        }
+    }
+
+    private static void ensureSessionIdColumnExists(Connection conn) {
+        try (Statement stmt = conn.createStatement()) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet columns = metaData.getColumns(null, null, "User", "sessionId");
+            
+            if (!columns.next()) {
+                stmt.execute("ALTER TABLE User ADD COLUMN sessionId TEXT");
+                System.out.println("sessionId column added to User table.");
+            } else {
+                System.out.println("sessionId column already exists.");
+            }
+        } catch (SQLException e) {
+            System.out.println("sessionId column may already exist: " + e.getMessage());
         }
     }
 
@@ -58,7 +75,7 @@ public class UserDatabase {
                 String username = rs.getString("username");
                 String surname = rs.getString("surname");
                 String password = rs.getString("password");
-                String sessionId = rs.getString("sessionId");
+                String sessionId = getSafeString(rs, "sessionId");
 
                 user = new User();
                 user.setId(userId);
@@ -89,7 +106,7 @@ public class UserDatabase {
                 Long userId = rs.getLong("id");
                 String surname = rs.getString("surname");
                 String password = rs.getString("password");
-                String sessionId = rs.getString("sessionId");
+                String sessionId = getSafeString(rs, "sessionId");
 
                 user = new User();
                 user.setId(userId);
@@ -146,6 +163,23 @@ public class UserDatabase {
             System.out.println("User sessionId updated successfully.");
         } catch (SQLException e) {
             System.out.println("Error updating user sessionId: " + e.getMessage());
+        }
+    }
+
+    private static String getSafeString(ResultSet rs, String columnName) {
+        try {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            
+            for (int i = 1; i <= columnCount; i++) {
+                if (metaData.getColumnName(i).equalsIgnoreCase(columnName)) {
+                    return rs.getString(columnName);
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            System.out.println("Error getting column " + columnName + ": " + e.getMessage());
+            return null;
         }
     }
 
