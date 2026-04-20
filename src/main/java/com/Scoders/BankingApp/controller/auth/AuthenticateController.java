@@ -30,7 +30,7 @@ public class AuthenticateController {
     if (user!= null){
         session.removeAttribute("currentUser");
     }
-    return "index"; // Render index.html
+    return "index"; 
 }
 
 @GetMapping("/register")
@@ -82,6 +82,16 @@ public String login(
     public String surname(){
         return "surname";
     }
+
+@GetMapping("/logout")
+public String logout(HttpSession session) {
+    User user = (User) session.getAttribute("currentUser");
+    if (user != null) {
+        UserDatabase.updateUserSessionId(user.getId(), null);
+        session.removeAttribute("currentUser");
+    }
+    return "redirect:/login";
+}
 
 }
 

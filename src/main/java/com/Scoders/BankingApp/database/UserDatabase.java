@@ -14,7 +14,8 @@ public class UserDatabase {
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "username TEXT, "
                 + "surname TEXT, "
-                + "password TEXT)";
+                + "password TEXT, "
+                + "sessionId TEXT)";
 
         try (Connection conn = DriverManager.getConnection(DATABASE_URL);
              Statement stmt = conn.createStatement()) {
@@ -57,12 +58,14 @@ public class UserDatabase {
                 String username = rs.getString("username");
                 String surname = rs.getString("surname");
                 String password = rs.getString("password");
+                String sessionId = rs.getString("sessionId");
 
                 user = new User();
                 user.setId(userId);
                 user.setUsername(username);
                 user.setSurname(surname);
                 user.setPassword(password);
+                user.setSessionId(sessionId);
             }
         } catch (SQLException e) {
             System.out.println("Error retrieving user: " + e.getMessage());
@@ -86,12 +89,14 @@ public class UserDatabase {
                 Long userId = rs.getLong("id");
                 String surname = rs.getString("surname");
                 String password = rs.getString("password");
+                String sessionId = rs.getString("sessionId");
 
                 user = new User();
                 user.setId(userId);
                 user.setUsername(username);
                 user.setSurname(surname);
                 user.setPassword(password);
+                user.setSessionId(sessionId);
             }
         } catch (SQLException e) {
             System.out.println("Error retrieving user: " + e.getMessage());
@@ -127,6 +132,20 @@ public class UserDatabase {
             System.out.println("User deleted successfully.");
         } catch (SQLException e) {
             System.out.println("Error deleting user: " + e.getMessage());
+        }
+    }
+
+    public static void updateUserSessionId(Long id, String sessionId) {
+        String updateSQL = "UPDATE User SET sessionId = ? WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+            pstmt.setString(1, sessionId);
+            pstmt.setLong(2, id);
+            pstmt.executeUpdate();
+            System.out.println("User sessionId updated successfully.");
+        } catch (SQLException e) {
+            System.out.println("Error updating user sessionId: " + e.getMessage());
         }
     }
 

@@ -55,7 +55,16 @@ public class Authentication {
         }
         
         if (loginSuccess) {
+            String existingSessionId = user.getSessionId();
+            if (existingSessionId != null && !existingSessionId.isEmpty() && !existingSessionId.equals(sessionId)) {
+                model.addAttribute("response", "该账号已在其他设备登录，请先退出其他设备");
+                model.addAttribute("showCaptcha", requiresCaptcha);
+                return "login";
+            }
+            
             LoginAttemptService.loginSucceeded(username);
+            UserDatabase.updateUserSessionId(user.getId(), sessionId);
+            user.setSessionId(sessionId);
             session.setAttribute("currentUser", user);
             model.addAttribute("user", user);
             return "dashboard";

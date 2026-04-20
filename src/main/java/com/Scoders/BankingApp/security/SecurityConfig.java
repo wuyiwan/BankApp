@@ -1,5 +1,6 @@
 package com.Scoders.BankingApp.security;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,5 +26,14 @@ public class SecurityConfig {
             .logout(logout -> logout.disable());
         
         return http.build();
+    }
+
+    @Bean
+    public FilterRegistrationBean<SessionFilter> sessionFilterRegistration() {
+        FilterRegistrationBean<SessionFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new SessionFilter());
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setOrder(1);
+        return registrationBean;
     }
 }
