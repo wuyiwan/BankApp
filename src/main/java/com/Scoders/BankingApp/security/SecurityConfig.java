@@ -23,7 +23,12 @@ public class SecurityConfig {
             )
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
-            .logout(logout -> logout.disable());
+            .logout(logout -> logout.disable())
+            .sessionManagement(session -> session
+                .sessionFixation().migrateSession() // 防止会话固定攻击
+                .maximumSessions(1) // 每个用户最多一个会话
+                .expiredUrl("/login?message=您的会话已过期，请重新登录")
+            );
         
         return http.build();
     }

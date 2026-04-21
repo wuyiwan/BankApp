@@ -62,6 +62,8 @@ public class Authentication {
                 return "login";
             }
             
+            // 登录成功后，Spring Security会通过sessionFixation().migrateSession()处理会话固定攻击
+            
             LoginAttemptService.loginSucceeded(username);
             UserDatabase.updateUserSessionId(user.getId(), sessionId);
             user.setSessionId(sessionId);
